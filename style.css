@@ -316,6 +316,12 @@ button, input { font: inherit; }
   border-top: 1px solid var(--line); padding-top: 14px; margin-top: 10px;
 }
 
+.load-error {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 300;
+  background: #fff0f2; color: #b4232a; border: 2px solid #e5484d; border-radius: 14px;
+  padding: 14px 16px; font-weight: 600; box-shadow: var(--shadow);
+}
+
 /* ----- 인쇄용 (개념 정리 노트를 PDF로 저장) ----- */
 @media print {
   @page { margin: 14mm; }
