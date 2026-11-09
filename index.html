@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="청소년을 위한 금융교육 웹 게임 - 금리, 장기투자, 고위험 상품의 위험을 체험해 보세요.">
+  <title>나의 첫 금융투자</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== 상단 헤더 ===== -->
+  <header class="app-header no-print">
+    <div class="header-inner">
+      <h1 class="app-title"><span aria-hidden="true">💰 </span>나의 첫 금융투자</h1>
+      <button type="button" id="btn-notebook" class="btn btn-note">📚 개념 노트</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ===== 1. 시작 화면 ===== -->
+    <section id="screen-start" class="screen active" aria-label="시작 화면">
+      <div class="card hero">
+        <div class="hero-emoji" aria-hidden="true">🐷💸📈</div>
+        <h2 class="hero-title">나의 첫 금융투자</h2>
+        <p class="hero-sub">어른이 되기 전에, 10년 동안 투자를 미리 경험해 봐요!</p>
+
+        <ul class="rule-list">
+          <li><span class="rule-ico">💵</span> 초기 자금 <strong>1,000,000원</strong>으로 시작해요.</li>
+          <li><span class="rule-ico">📅</span> <strong>10년</strong> 동안 1년에 한 번씩 투자 결정을 내려요.</li>
+          <li><span class="rule-ico">🧺</span> 3가지 상품에 투자할 수 있어요.
+            <div class="product-chips">
+              <span class="chip chip-deposit">🏦 예금</span>
+              <span class="chip chip-stock">📈 주식 '미래전자'</span>
+              <span class="chip chip-option">🎲 콜옵션</span>
+            </div>
+          </li>
+          <li><span class="rule-ico">🏁</span> 10년 후에는 가진 것을 <strong>전부 현금으로 바꿔(청산)</strong> 최종 자산을 계산해요.</li>
+          <li><span class="rule-ico">📘</span> 어려운 용어 옆 📘 버튼을 누르면 쉬운 설명을 볼 수 있어요.</li>
+        </ul>
+
+        <div class="hero-actions">
+          <button type="button" id="btn-start" class="btn btn-primary btn-lg">게임 시작하기 ▶</button>
+          <button type="button" id="btn-preview-concepts" class="btn btn-ghost btn-lg">📚 개념 미리 공부하기</button>
+        </div>
+        <p class="small muted center">본 게임은 교육용이며 실제 투자 권유가 아닙니다.</p>
+      </div>
+    </section>
+
+    <!-- ===== 2. 게임 화면 ===== -->
+    <section id="screen-game" class="screen" aria-label="게임 화면">
+
+      <!-- 연차 -->
+      <div class="card year-card">
+        <div class="year-row">
+          <div class="year-label"><span id="year-num">1</span>년차 <span class="muted">/ 10년</span></div>
+          <div class="year-total">총자산 <strong id="total-assets-top">0원</strong></div>
+        </div>
+        <div class="progress" aria-hidden="true"><div id="progress-bar" class="progress-bar"></div></div>
+      </div>
+
+      <div class="grid-2">
+        <!-- 뉴스 -->
+        <div class="card news-card">
+          <h3 class="card-title">📰 올해의 뉴스</h3>
+          <p id="news-headline" class="news-headline"></p>
+          <p class="news-rate"><span class="tag">🏦 금리 소식</span> <span id="rate-reason"></span></p>
+        </div>
+
+        <!-- 금리 -->
+        <div class="card rate-card">
+          <h3 class="card-title">📊 올해의 금리</h3>
+          <div class="rate-boxes">
+            <div class="rate-box">
+              <div class="rate-name">기준금리 <button type="button" class="cbtn" data-concept="base-rate" aria-label="기준금리 설명">📘</button></div>
+              <div id="base-rate" class="rate-value">0%</div>
+            </div>
+            <div class="rate-box rate-box-dep">
+              <div class="rate-name">예금금리 <button type="button" class="cbtn" data-concept="deposit-rate" aria-label="예금금리 설명">📘</button></div>
+              <div id="deposit-rate" class="rate-value">0%</div>
+            </div>
+          </div>
+          <p class="small muted">예금금리 = 기준금리 + 0.5%p · 현금에는 이자가 붙지 않아요.</p>
+        </div>
+      </div>
+
+      <!-- 보유 현황 -->
+      <div class="card holdings-card">
+        <h3 class="card-title">👛 나의 보유 현황</h3>
+        <div class="holdings">
+          <div class="hold-item">
+            <div class="hold-name">💵 현금</div>
+            <div id="h-cash" class="hold-value">0원</div>
+            <div class="hold-sub">이자 없음</div>
+          </div>
+          <div class="hold-item">
+            <div class="hold-name">🏦 예금 <button type="button" class="cbtn" data-concept="interest" aria-label="이자 설명">📘</button></div>
+            <div id="h-deposit" class="hold-value">0원</div>
+            <div id="h-deposit-sub" class="hold-sub"></div>
+          </div>
+          <div class="hold-item">
+            <div class="hold-name">📈 주식 <button type="button" class="cbtn" data-concept="stock" aria-label="주식 설명">📘</button></div>
+            <div id="h-stock" class="hold-value">0원</div>
+            <div id="h-stock-sub" class="hold-sub"></div>
+          </div>
+          <div class="hold-item">
+            <div class="hold-name">🎲 옵션 <button type="button" class="cbtn" data-concept="option" aria-label="옵션 설명">📘</button></div>
+            <div id="h-option" class="hold-value">0계약</div>
+            <div id="h-option-sub" class="hold-sub"></div>
+          </div>
+        </div>
+        <div class="total-row">
+          <span>총자산</span>
+          <strong id="h-total">0원</strong>
+        </div>
+      </div>
+
+      <!-- 매매 패널 -->
+      <div class="grid-3">
+        <!-- 예금 -->
+        <div class="card trade-card trade-deposit">
+          <h3 class="card-title">🏦 상품1 · 예금</h3>
+          <p class="trade-info">예금금리 <strong id="t-dep-rate">0%</strong> <button type="button" class="cbtn" data-concept="compound" aria-label="복리 설명">📘</button> 복리</p>
+          <p class="small muted">언제든 넣고 뺄 수 있어요. 1년이 지나면 예금 잔액에 이자가 붙어요.</p>
+          <label class="field">
+            <span>금액 (원)</span>
+            <input id="in-dep" type="number" inputmode="numeric" min="1" step="1" placeholder="예: 500000">
+          </label>
+          <div class="quick">
+            <button type="button" class="btn btn-mini" data-quick="dep-cash">현금 전액</button>
+            <button type="button" class="btn btn-mini" data-quick="dep-all">예금 전액</button>
+          </div>
+          <div class="btn-row">
+            <button type="button" id="btn-dep-in" class="btn btn-deposit">입금</button>
+            <button type="button" id="btn-dep-out" class="btn btn-outline">출금</button>
+          </div>
+          <p id="dep-preview" class="preview"></p>
+        </div>
+
+        <!-- 주식 -->
+        <div class="card trade-card trade-stock">
+          <h3 class="card-title">📈 상품2 · 주식 '미래전자'</h3>
+          <p class="trade-info">현재가 <strong id="t-price">0원</strong> <button type="button" class="cbtn" data-concept="price-change" aria-label="주가 변동 설명">📘</button></p>
+          <p class="small muted">1주 단위로 사고팔아요. 수수료 0.5% <button type="button" class="cbtn" data-concept="fee" aria-label="매매수수료 설명">📘</button></p>
+          <label class="field">
+            <span>수량 (주)</span>
+            <input id="in-stock" type="number" inputmode="numeric" min="1" step="1" placeholder="예: 10">
+          </label>
+          <div class="quick">
+            <button type="button" class="btn btn-mini" data-quick="stock-max">최대 매수</button>
+            <button type="button" class="btn btn-mini" data-quick="stock-all">전량 매도</button>
+          </div>
+          <div class="btn-row">
+            <button type="button" id="btn-buy" class="btn btn-buy">매수</button>
+            <button type="button" id="btn-sell" class="btn btn-sell">매도</button>
+          </div>
+          <p id="stock-preview" class="preview"></p>
+        </div>
+
+        <!-- 옵션 -->
+        <div class="card trade-card trade-option">
+          <div class="hype" aria-label="광고 문구">🔥 최대 10배 수익 가능!</div>
+          <h3 class="card-title">🎲 상품3 · 콜옵션 <button type="button" class="cbtn" data-concept="call-option" aria-label="콜옵션 설명">📘</button></h3>
+          <p class="trade-info">1계약 <strong>10,000원</strong> <button type="button" class="cbtn" data-concept="premium" aria-label="프리미엄 설명">📘</button></p>
+          <p class="trade-info">행사가 <strong id="t-strike">0원</strong> <button type="button" class="cbtn" data-concept="strike" aria-label="행사가 설명">📘</button></p>
+          <label class="field">
+            <span>계약 수</span>
+            <input id="in-option" type="number" inputmode="numeric" min="1" step="1" placeholder="예: 5">
+          </label>
+          <div class="btn-row">
+            <button type="button" id="btn-option" class="btn btn-option">콜옵션 매수</button>
+          </div>
+          <p class="fine-print">* 만기 1년 <button type="button" class="cbtn cbtn-sm" data-concept="expiry" aria-label="만기와 소멸 설명">📘</button> · 1년 뒤 주가가 행사가 이상이면 수익, 미만이면 옵션이 소멸되어 투자금 전액을 잃습니다.</p>
+        </div>
+      </div>
+
+      <div class="next-wrap">
+        <button type="button" id="btn-next" class="btn btn-primary btn-xl">⏩ 1년 보내기</button>
+      </div>
+    </section>
+
+    <!-- ===== 4. 최종 결과 화면 ===== -->
+    <section id="screen-final" class="screen" aria-label="최종 결과">
+      <div class="card final-hero">
+        <h2 class="final-title">🏁 10년 투자 결과</h2>
+        <div class="final-stats">
+          <div class="fstat">
+            <div class="fstat-label">최종 자산</div>
+            <div id="f-final" class="fstat-value">0원</div>
+          </div>
+          <div class="fstat">
+            <div class="fstat-label">총 수익률 <button type="button" class="cbtn" data-concept="return" aria-label="수익률 설명">📘</button></div>
+            <div id="f-return" class="fstat-value">0%</div>
+          </div>
+          <div class="fstat">
+            <div class="fstat-label">수익/손실 금액</div>
+            <div id="f-profit" class="fstat-value">0원</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card no-break">
+        <h3 class="card-title">📉 연도별 총자산 변화</h3>
+        <div class="chart-legend">
+          <span><i class="lg lg-me"></i>나의 총자산</span>
+          <span><i class="lg lg-dep"></i>예금만 했다면</span>
+          <span><i class="lg lg-stock"></i>주식만 장기보유했다면</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="chart" aria-label="연도별 총자산 꺾은선 그래프" role="img"></canvas>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card no-break">
+          <h3 class="card-title">⚖️ 비교표</h3>
+          <table class="cmp-table">
+            <thead><tr><th>전략</th><th>최종 자산</th><th>수익률</th></tr></thead>
+            <tbody id="cmp-body"></tbody>
+          </table>
+        </div>
+        <div class="card no-break">
+          <h3 class="card-title">🧾 나의 투자 기록</h3>
+          <ul class="record-list" id="record-list"></ul>
+        </div>
+      </div>
+
+      <div class="card no-break">
+        <h3 class="card-title">💡 꼭 기억해요</h3>
+        <ol class="lesson-list">
+          <li><strong>금리는 경제 상황에 따라 변하고, 예금 수익도 달라집니다.</strong></li>
+          <li><strong>뉴스에 흔들려 자주 사고팔면 수수료와 타이밍 실패로 손해 보기 쉽습니다.</strong> 좋은 기업은 오래 보유하는 것이 유리할 수 있습니다.</li>
+          <li><strong>"고수익"을 강조하는 상품은 원금을 모두 잃을 수 있습니다.</strong> 실제 옵션이 항상 손실인 것은 아니지만, 개인투자자 다수가 손실을 봅니다.</li>
+        </ol>
+      </div>
+
+      <div class="card notes-card">
+        <div class="notes-head">
+          <h3 class="card-title">📒 개념 정리 노트</h3>
+          <button type="button" id="btn-print" class="btn btn-outline no-print">🖨️ 인쇄/PDF로 저장</button>
+        </div>
+        <p class="small muted">10년 동안 내가 겪은 일과 연결해서 개념을 정리했어요. 공식 자료로 더 공부해 보세요!</p>
+        <div id="final-notes"></div>
+      </div>
+
+      <div class="final-actions no-print">
+        <button type="button" id="btn-restart" class="btn btn-primary btn-lg">🔄 다시 하기</button>
+      </div>
+
+      <p class="disclaimer">본 게임은 교육용이며 실제 투자 권유가 아닙니다. 개념 설명은 학습용 요약이며, 정확한 내용은 공식 자료를 확인하세요.</p>
+    </section>
+  </main>
+
+  <!-- ===== 3. 연말 결과 팝업 ===== -->
+  <div id="modal-year" class="modal no-print" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="year-modal-title">
+      <h2 id="year-modal-title" class="modal-title">1년차 결산</h2>
+      <div id="year-modal-body"></div>
+      <div class="modal-actions">
+        <button type="button" id="btn-year-ok" class="btn btn-primary btn-lg">다음 해로 ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 개념 설명 모달 ===== -->
+  <div id="modal-concept" class="modal no-print" hidden>
+    <div class="modal-backdrop" data-close="concept"></div>
+    <div class="modal-box modal-concept-box" role="dialog" aria-modal="true" aria-labelledby="concept-title">
+      <button type="button" class="modal-x" data-close="concept" aria-label="닫기">✕</button>
+      <div id="concept-cat" class="concept-cat"></div>
+      <h2 id="concept-title" class="modal-title"></h2>
+      <p id="concept-desc" class="concept-desc"></p>
+      <div class="concept-example">
+        <div class="ex-label">🎮 게임 속 예시</div>
+        <p id="concept-example"></p>
+      </div>
+      <div class="concept-links-wrap">
+        <div class="ex-label">🔗 공식 자료로 더 공부하기</div>
+        <div id="concept-links" class="link-btns"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close="concept">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 개념 노트 모달 ===== -->
+  <div id="modal-notebook" class="modal no-print" hidden>
+    <div class="modal-backdrop" data-close="notebook"></div>
+    <div class="modal-box modal-notebook-box" role="dialog" aria-modal="true" aria-labelledby="notebook-title">
+      <button type="button" class="modal-x" data-close="notebook" aria-label="닫기">✕</button>
+      <h2 id="notebook-title" class="modal-title">📚 개념 노트</h2>
+      <p class="small muted">읽어 본 개념에는 ✅ 표시가 붙어요. <span id="viewed-count"></span></p>
+      <input id="nb-search" class="search" type="search" placeholder="🔍 개념 검색 (예: 금리, 옵션)">
+      <div id="nb-tabs" class="tabs" role="tablist"></div>
+      <div id="nb-list" class="nb-list"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast no-print" role="status" aria-live="polite"></div>
+
+  <script src="concepts.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
