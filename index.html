@@ -301,7 +301,23 @@
 
   <div id="toast" class="toast no-print" role="status" aria-live="polite"></div>
 
+  <!-- 스크립트를 못 불러왔을 때 원인을 화면에 알려 주는 안내 -->
+  <div id="load-error" class="load-error" hidden></div>
+
   <script src="concepts.js"></script>
   <script src="script.js"></script>
+  <script>
+    window.addEventListener("load", function () {
+      if (window.__GAME_READY__) return;
+      var missing = [];
+      if (typeof CONCEPTS === "undefined") missing.push("concepts.js");
+      if (typeof SCENARIO === "undefined") missing.push("script.js");
+      var box = document.getElementById("load-error");
+      box.innerHTML = "⚠️ 게임 파일을 불러오지 못해 버튼이 작동하지 않아요.<br>" +
+        (missing.length ? "찾지 못한 파일: <b>" + missing.join(", ") + "</b><br>" : "") +
+        "index.html, style.css, script.js, concepts.js가 <b>같은 폴더</b>에 정확한 이름으로 있는지 확인해 주세요.";
+      box.hidden = false;
+    });
+  </script>
 </body>
 </html>
