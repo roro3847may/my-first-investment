@@ -857,4 +857,19 @@ function init() {
   window.addEventListener("beforeprint", drawChart);
 }
 
-document.addEventListener("DOMContentLoaded", init);
+function safeInit() {
+  try {
+    init();
+    window.__GAME_READY__ = true;
+  } catch (err) {
+    const box = document.getElementById("load-error");
+    if (box) {
+      box.textContent = "⚠️ 게임을 시작하는 중 오류가 났어요: " + err.message;
+      box.hidden = false;
+    }
+    console.error(err);
+  }
+}
+// 스크립트가 늦게 실행돼도 확실히 연결되도록 처리
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", safeInit);
+else safeInit();
